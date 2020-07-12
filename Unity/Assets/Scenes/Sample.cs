@@ -38,7 +38,10 @@ square(5);";
                 engine = new Engine();
                 return;
             }
-            Log(engine.EvaluateScript(inputFieldText));
+
+            var (value, error) = engine.EvaluateScript(inputFieldText);
+            if (!string.IsNullOrWhiteSpace(error)) Log($"Error! {error}");
+            Log(value.ToString());
         }
 
         private void Log(string message)
