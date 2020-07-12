@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Diagnostics;
+using UnityEngine;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 
 namespace BridgeJsCore.Sample
 {
@@ -15,11 +17,11 @@ namespace BridgeJsCore.Sample
         {
             engine = new Engine();
 
-            inputField.text = @"function square(number) {
-  return number * number;
+            inputField.text = @"function fib(n) {
+  return n <= 1 ? n : fib(n - 1) + fib(n - 2);
 }
 
-square(5);";
+fib(10);";
 
             resultText.text = "";
 
@@ -39,9 +41,10 @@ square(5);";
                 return;
             }
 
+            var stopWatch = Stopwatch.StartNew();
             var (value, error) = engine.EvaluateScript(inputFieldText);
             if (!string.IsNullOrWhiteSpace(error)) Log($"Error! {error}");
-            Log(value.ToString());
+            Log($"{stopWatch.ElapsedMilliseconds}ms | {value}");
         }
 
         private void Log(string message)
