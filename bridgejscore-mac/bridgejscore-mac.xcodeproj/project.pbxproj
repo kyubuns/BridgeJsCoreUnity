@@ -6,9 +6,16 @@
 	objectVersion = 50;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		060015E624BB602D00D35D8E /* BridgeJsCore.mm in Sources */ = {isa = PBXBuildFile; fileRef = 060015E524BB602D00D35D8E /* BridgeJsCore.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		060015E924BB607400D35D8E /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 060015E824BB607400D35D8E /* JavaScriptCore.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		060015DC24BB5FFB00D35D8E /* bridgejscore-mac.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "bridgejscore-mac.bundle"; sourceTree = BUILT_PRODUCTS_DIR; };
 		060015DF24BB5FFB00D35D8E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		060015E524BB602D00D35D8E /* BridgeJsCore.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = BridgeJsCore.mm; path = ../../Unity/Assets/BridgeJsCore/BridgeJsCore.mm; sourceTree = "<group>"; };
+		060015E824BB607400D35D8E /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -16,6 +23,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				060015E924BB607400D35D8E /* JavaScriptCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -27,6 +35,7 @@
 			children = (
 				060015DE24BB5FFB00D35D8E /* bridgejscore-mac */,
 				060015DD24BB5FFB00D35D8E /* Products */,
+				060015E724BB607400D35D8E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -41,9 +50,18 @@
 		060015DE24BB5FFB00D35D8E /* bridgejscore-mac */ = {
 			isa = PBXGroup;
 			children = (
+				060015E524BB602D00D35D8E /* BridgeJsCore.mm */,
 				060015DF24BB5FFB00D35D8E /* Info.plist */,
 			);
 			path = "bridgejscore-mac";
+			sourceTree = "<group>";
+		};
+		060015E724BB607400D35D8E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				060015E824BB607400D35D8E /* JavaScriptCore.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -113,6 +131,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				060015E624BB602D00D35D8E /* BridgeJsCore.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
