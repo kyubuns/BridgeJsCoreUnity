@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		060015E624BB602D00D35D8E /* BridgeJsCore.mm in Sources */ = {isa = PBXBuildFile; fileRef = 060015E524BB602D00D35D8E /* BridgeJsCore.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		060015E624BB602D00D35D8E /* BridgeJsCore.mm in Sources */ = {isa = PBXBuildFile; fileRef = 060015E524BB602D00D35D8E /* BridgeJsCore.mm */; };
 		060015E924BB607400D35D8E /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 060015E824BB607400D35D8E /* JavaScriptCore.framework */; };
+		069FF44024BB95F100C6D41C /* BridgeJsCoreNoArc.mm in Sources */ = {isa = PBXBuildFile; fileRef = 069FF43F24BB95F100C6D41C /* BridgeJsCoreNoArc.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -16,6 +17,7 @@
 		060015DF24BB5FFB00D35D8E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		060015E524BB602D00D35D8E /* BridgeJsCore.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = BridgeJsCore.mm; path = ../../Unity/Assets/BridgeJsCore/BridgeJsCore.mm; sourceTree = "<group>"; };
 		060015E824BB607400D35D8E /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		069FF43F24BB95F100C6D41C /* BridgeJsCoreNoArc.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = BridgeJsCoreNoArc.mm; path = ../../Unity/Assets/BridgeJsCore/BridgeJsCoreNoArc.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +52,7 @@
 		060015DE24BB5FFB00D35D8E /* bridgejscore-mac */ = {
 			isa = PBXGroup;
 			children = (
+				069FF43F24BB95F100C6D41C /* BridgeJsCoreNoArc.mm */,
 				060015E524BB602D00D35D8E /* BridgeJsCore.mm */,
 				060015DF24BB5FFB00D35D8E /* Info.plist */,
 			);
@@ -131,6 +134,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				069FF44024BB95F100C6D41C /* BridgeJsCoreNoArc.mm in Sources */,
 				060015E624BB602D00D35D8E /* BridgeJsCore.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

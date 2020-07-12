@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 46969fa3dc9a04dd587d9ffc8a24b75c
+guid: a87c3d72bd684ca4a70012234b5896e0
 PluginImporter:
   externalObjects: {}
   serializedVersion: 2
@@ -34,31 +34,31 @@ PluginImporter:
       settings:
         CPU: AnyCPU
         DefaultValueInitialized: true
-        OS: AnyOS
+        OS: OSX
   - first:
       Standalone: Linux64
     second:
       enabled: 0
       settings:
-        CPU: AnyCPU
+        CPU: None
   - first:
       Standalone: OSXUniversal
     second:
       enabled: 0
       settings:
-        CPU: x86_64
+        CPU: None
   - first:
       Standalone: Win
     second:
       enabled: 0
       settings:
-        CPU: x86
+        CPU: None
   - first:
       Standalone: Win64
     second:
       enabled: 0
       settings:
-        CPU: x86_64
+        CPU: None
   - first:
       iPhone: iOS
     second:
@@ -66,7 +66,7 @@ PluginImporter:
       settings:
         AddToEmbeddedBinaries: false
         CPU: AnyCPU
-        CompileFlags: 
+        CompileFlags: -fno-objc-arc
         FrameworkDependencies: JavaScriptCore;
   - first:
       tvOS: tvOS

@@ -15,30 +15,7 @@ char* BridgeJsCore_MakeStringCopy(const char* string)
 
 extern "C"
 {
-    struct SerializedJsValue
-    {
-        char *Value;
-        bool IsUndefined;
-        bool IsNull;
-        bool IsBoolean;
-        bool IsNumber;
-        bool IsString;
-        bool IsObject;
-        bool IsArray;
-    };
-
-    JSContext *_BridgeJsCore_New()
-    {
-        JSContext *context = [[JSContext alloc] init];
-        return context;
-    }
-
-    void _BridgeJsCore_Dispose(JSContext *context)
-    {
-        [context release];
-    }
-
-    SerializedJsValue *_BridgeJsCore_EvaluateScript(JSContext *context, const char *text, char *&error)
+    JSValue *_BridgeJsCore_EvaluateScript(JSContext *context, const char *text, char *&error)
     {
         __block NSString *exceptionString = @"";
         context.exceptionHandler = ^(JSContext *context, JSValue *exception) {
@@ -48,20 +25,85 @@ extern "C"
         JSValue *original = [context evaluateScript: BridgeJsCore_CreateNSString(text)];
         error = BridgeJsCore_MakeStringCopy([exceptionString UTF8String]);
         
-        SerializedJsValue *serialized = new SerializedJsValue();
-        serialized->Value = BridgeJsCore_MakeStringCopy([original.toString UTF8String]);
-        serialized->IsUndefined = original.isUndefined;
-        serialized->IsNull = original.isNull;
-        serialized->IsBoolean = original.isBoolean;
-        serialized->IsNumber = original.isNumber;
-        serialized->IsString = original.isString;
-        serialized->IsObject = original.isObject;
-        serialized->IsArray = original.isArray;
-        return serialized;
+        return original;
     }
 
-    void _BridgeJsCore_FreeJsValue(SerializedJsValue *serialized)
+    void _BridgeJsCore_JsValue_Dispose(JSValue *jsValue)
     {
-        delete serialized;
+    }
+
+    bool _BridgeJsCore_JsValue_IsUndefined(JSValue *jsValue)
+    {
+        return jsValue.isUndefined;
+    }
+
+    bool _BridgeJsCore_JsValue_IsNull(JSValue *jsValue)
+    {
+        return jsValue.isNull;
+    }
+
+    bool _BridgeJsCore_JsValue_IsBoolean(JSValue *jsValue)
+    {
+        return jsValue.isBoolean;
+    }
+
+    bool _BridgeJsCore_JsValue_IsNumber(JSValue *jsValue)
+    {
+        return jsValue.isNumber;
+    }
+
+    bool _BridgeJsCore_JsValue_IsString(JSValue *jsValue)
+    {
+        return jsValue.isString;
+    }
+
+    bool _BridgeJsCore_JsValue_IsObject(JSValue *jsValue)
+    {
+        return jsValue.isObject;
+    }
+
+    bool _BridgeJsCore_JsValue_IsArray(JSValue *jsValue)
+    {
+        return jsValue.isArray;
+    }
+
+    bool _BridgeJsCore_JsValue_ToBool(JSValue *jsValue)
+    {
+        return jsValue.toBool;
+    }
+
+    double _BridgeJsCore_JsValue_ToDouble(JSValue *jsValue)
+    {
+        return jsValue.toDouble;
+    }
+
+    int32_t _BridgeJsCore_JsValue_ToInt32(JSValue *jsValue)
+    {
+        return jsValue.toInt32;
+    }
+
+    uint32_t _BridgeJsCore_JsValue_ToUInt32(JSValue *jsValue)
+    {
+        return jsValue.toUInt32;
+    }
+
+    char *_BridgeJsCore_JsValue_ToString(JSValue *jsValue)
+    {
+        return BridgeJsCore_MakeStringCopy([jsValue.toString UTF8String]);
+    }
+
+    bool _BridgeJsCore_JsValue_HasProperty(JSValue *jsValue, const char *property)
+    {
+        return [jsValue hasProperty: BridgeJsCore_CreateNSString(property)];
+    }
+
+    JSValue *_BridgeJsCore_JsValue_AtIndex(JSValue *jsValue, int index)
+    {
+        return [jsValue valueAtIndex: index];
+    }
+
+    JSValue *_BridgeJsCore_JsValue_ForProperty(JSValue *jsValue, const char *property)
+    {
+        return [jsValue valueForProperty: BridgeJsCore_CreateNSString(property)];
     }
 }

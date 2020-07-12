@@ -1,64 +1,110 @@
 using System;
+using System.Runtime.InteropServices;
 
 namespace BridgeJsCore
 {
     // https://developer.apple.com/documentation/javascriptcore/jsvalue
-    public class JsValue
+    public class JsValue : IDisposable
     {
-        public string Value { get; }
-        public bool IsUndefined { get; }
-        public bool IsNull { get; }
-        public bool IsBoolean { get; }
-        public bool IsNumber { get; }
-        public bool IsString { get; }
-        public bool IsObject { get; }
-        public bool IsArray { get; }
+        [DllImport("__Internal")]
+        private static extern void _BridgeJsCore_JsValue_Dispose(IntPtr value);
 
-        public JsValue(string value, bool isUndefined, bool isNull, bool isBoolean, bool isNumber, bool isString, bool isObject, bool isArray)
+        [DllImport("__Internal")]
+        [return: MarshalAs(UnmanagedType.U1)]
+        private static extern bool _BridgeJsCore_JsValue_IsUndefined(IntPtr value);
+
+        [DllImport("__Internal")]
+        [return: MarshalAs(UnmanagedType.U1)]
+        private static extern bool _BridgeJsCore_JsValue_IsNull(IntPtr value);
+
+        [DllImport("__Internal")]
+        [return: MarshalAs(UnmanagedType.U1)]
+        private static extern bool _BridgeJsCore_JsValue_IsBoolean(IntPtr value);
+
+        [DllImport("__Internal")]
+        [return: MarshalAs(UnmanagedType.U1)]
+        private static extern bool _BridgeJsCore_JsValue_IsNumber(IntPtr value);
+
+        [DllImport("__Internal")]
+        [return: MarshalAs(UnmanagedType.U1)]
+        private static extern bool _BridgeJsCore_JsValue_IsString(IntPtr value);
+
+        [DllImport("__Internal")]
+        [return: MarshalAs(UnmanagedType.U1)]
+        private static extern bool _BridgeJsCore_JsValue_IsObject(IntPtr value);
+
+        [DllImport("__Internal")]
+        [return: MarshalAs(UnmanagedType.U1)]
+        private static extern bool _BridgeJsCore_JsValue_IsArray(IntPtr value);
+
+        [DllImport("__Internal")]
+        [return: MarshalAs(UnmanagedType.U1)]
+        private static extern bool _BridgeJsCore_JsValue_ToBool(IntPtr value);
+
+        [DllImport("__Internal")]
+        private static extern double _BridgeJsCore_JsValue_ToDouble(IntPtr value);
+
+        [DllImport("__Internal")]
+        private static extern Int32 _BridgeJsCore_JsValue_ToInt32(IntPtr value);
+
+        [DllImport("__Internal")]
+        private static extern UInt32 _BridgeJsCore_JsValue_ToUInt32(IntPtr value);
+
+        [DllImport("__Internal")]
+        private static extern string _BridgeJsCore_JsValue_ToString(IntPtr value);
+
+        [DllImport("__Internal")]
+        [return: MarshalAs(UnmanagedType.U1)]
+        private static extern bool _BridgeJsCore_JsValue_HasProperty(IntPtr value, string property);
+
+        [DllImport("__Internal")]
+        private static extern IntPtr _BridgeJsCore_JsValue_AtIndex(IntPtr value, int index);
+
+        [DllImport("__Internal")]
+        private static extern IntPtr _BridgeJsCore_JsValue_ForProperty(IntPtr value, string property);
+
+        private readonly IntPtr value;
+        private bool disposed;
+
+        public JsValue(IntPtr value)
         {
-            Value = value;
-            IsUndefined = isUndefined;
-            IsNull = isNull;
-            IsBoolean = isBoolean;
-            IsNumber = isNumber;
-            IsString = isString;
-            IsObject = isObject;
-            IsArray = isArray;
+            this.value = value;
         }
 
-        public bool ToBool()
+        public void Dispose()
         {
-            if (!IsBoolean) throw new InvalidCastException();
-            return string.Equals(Value, "true", StringComparison.Ordinal);
+            if (disposed) return;
+            disposed = true;
+            _BridgeJsCore_JsValue_Dispose(value);
         }
 
-        public double ToDouble()
+        public bool IsUndefined() => _BridgeJsCore_JsValue_IsUndefined(value);
+        public bool IsNull() => _BridgeJsCore_JsValue_IsNull(value);
+        public bool IsBoolean() => _BridgeJsCore_JsValue_IsBoolean(value);
+        public bool IsNumber() => _BridgeJsCore_JsValue_IsNumber(value);
+        public bool IsString() => _BridgeJsCore_JsValue_IsString(value);
+        public bool IsObject() => _BridgeJsCore_JsValue_IsObject(value);
+        public bool IsArray() => _BridgeJsCore_JsValue_IsArray(value);
+
+        public bool ToBool() => _BridgeJsCore_JsValue_ToBool(value);
+        public double ToDouble() => _BridgeJsCore_JsValue_ToDouble(value);
+        public float ToFloat() => (float) ToDouble();
+        public Int32 ToInt32() => _BridgeJsCore_JsValue_ToInt32(value);
+        public UInt32 ToUInt32() => _BridgeJsCore_JsValue_ToUInt32(value);
+        public override string ToString() => _BridgeJsCore_JsValue_ToString(value);
+
+        public bool HasProperty(string property) => _BridgeJsCore_JsValue_HasProperty(value, property);
+
+        public JsValue AtIndex(int index)
         {
-            if (!IsNumber) throw new InvalidCastException();
-            return double.Parse(Value);
+            var rawJsValuePtr = _BridgeJsCore_JsValue_AtIndex(value, index);
+            return new JsValue(rawJsValuePtr);
         }
 
-        public float ToFloat()
+        public JsValue ForProperty(string property)
         {
-            if (!IsNumber) throw new InvalidCastException();
-            return float.Parse(Value);
-        }
-
-        public Int32 ToInt32()
-        {
-            if (!IsNumber) throw new InvalidCastException();
-            return Int32.Parse(Value);
-        }
-
-        public UInt32 ToUInt32()
-        {
-            if (!IsNumber) throw new InvalidCastException();
-            return UInt32.Parse(Value);
-        }
-
-        public override string ToString()
-        {
-            return Value;
+            var rawJsValuePtr = _BridgeJsCore_JsValue_ForProperty(value, property);
+            return new JsValue(rawJsValuePtr);
         }
     }
 }

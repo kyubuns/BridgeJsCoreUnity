@@ -14,24 +14,8 @@ namespace BridgeJsCore
         [DllImport("__Internal")]
         private static extern IntPtr _BridgeJsCore_EvaluateScript(IntPtr context, string script, out string error);
 
-        [DllImport("__Internal")]
-        private static extern void _BridgeJsCore_FreeJsValue(IntPtr value);
-
-        [StructLayout(LayoutKind.Sequential)]
-        private class RawJsValue
-        {
-            public string Value;
-            [MarshalAs(UnmanagedType.U1)] public bool IsUndefined;
-            [MarshalAs(UnmanagedType.U1)] public bool IsNull;
-            [MarshalAs(UnmanagedType.U1)] public bool IsBoolean;
-            [MarshalAs(UnmanagedType.U1)] public bool IsNumber;
-            [MarshalAs(UnmanagedType.U1)] public bool IsString;
-            [MarshalAs(UnmanagedType.U1)] public bool IsObject;
-            [MarshalAs(UnmanagedType.U1)] public bool IsArray;
-        }
-
-        private bool disposed;
         private readonly IntPtr context;
+        private bool disposed;
 
         public Engine()
         {
@@ -49,10 +33,7 @@ namespace BridgeJsCore
         {
             if (disposed) throw new InvalidOperationException("engine is disposed");
             var rawJsValuePtr = _BridgeJsCore_EvaluateScript(context, script, out var error);
-            var rawJsValue = (RawJsValue) Marshal.PtrToStructure(rawJsValuePtr, typeof(RawJsValue));
-            var jsValue = new JsValue(rawJsValue.Value, rawJsValue.IsUndefined, rawJsValue.IsNull, rawJsValue.IsBoolean, rawJsValue.IsNumber, rawJsValue.IsString, rawJsValue.IsObject, rawJsValue.IsArray);
-            _BridgeJsCore_FreeJsValue(rawJsValuePtr);
-            return (jsValue, error);
+            return (new JsValue(rawJsValuePtr), error);
         }
     }
 }
