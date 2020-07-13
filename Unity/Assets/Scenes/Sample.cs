@@ -45,24 +45,15 @@ fib(10);";
             var (value, error) = engine.EvaluateScript(inputFieldText);
             if (!string.IsNullOrWhiteSpace(error)) Log($"Error! {error}");
 
-            Debug.Log($"value.IsUndefined() {value.IsUndefined()}");
-            Debug.Log($"value.IsNull() {value.IsNull()}");
-            Debug.Log($"value.IsNumber() {value.IsNumber()}");
-            Debug.Log($"value.IsString() {value.IsString()}");
-            Debug.Log($"value.IsArray() {value.IsArray()}");
-            Debug.Log($"value.IsObject() {value.IsObject()}");
-            Debug.Log($"value.ToDouble() {value.ToDouble()}");
-            Debug.Log($"value.ToString() {value.ToString()}");
-
-            if (value.IsArray())
+            if (value is JsArray jsArray)
             {
-                for (var i = 0; i < value.ForProperty("length").ToInt32(); ++i)
+                for (var i = 0; i < jsArray.Length; ++i)
                 {
-                    Debug.Log($"{i} = {value.AtIndex(i)}");
+                    Debug.Log($"{i} = {jsArray.AtIndex(i)}");
                 }
             }
 
-            Log($"{stopWatch.ElapsedMilliseconds}ms | {value}");
+            Log($"{stopWatch.ElapsedMilliseconds}ms | {value} ({value.GetType()})");
         }
 
         private void Log(string message)

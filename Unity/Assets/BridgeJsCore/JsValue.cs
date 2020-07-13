@@ -3,97 +3,113 @@ using System.Runtime.InteropServices;
 
 namespace BridgeJsCore
 {
-    // https://developer.apple.com/documentation/javascriptcore/jsvalue
-    public class JsValue
+    public interface IJsValue
     {
-        [DllImport("__Internal")]
-        [return: MarshalAs(UnmanagedType.U1)]
-        private static extern bool _BridgeJsCore_JsValue_IsUndefined(IntPtr value);
+    }
 
-        [DllImport("__Internal")]
-        [return: MarshalAs(UnmanagedType.U1)]
-        private static extern bool _BridgeJsCore_JsValue_IsNull(IntPtr value);
+    public class JsUndefined : IJsValue
+    {
+        public override string ToString() => "undefined";
+    }
 
-        [DllImport("__Internal")]
-        [return: MarshalAs(UnmanagedType.U1)]
-        private static extern bool _BridgeJsCore_JsValue_IsBoolean(IntPtr value);
+    public class JsNull : IJsValue
+    {
+        public override string ToString() => "null";
+    }
 
-        [DllImport("__Internal")]
-        [return: MarshalAs(UnmanagedType.U1)]
-        private static extern bool _BridgeJsCore_JsValue_IsNumber(IntPtr value);
+    public class JsBoolean : IJsValue
+    {
+        public JsBoolean(bool value)
+        {
+            Value = value;
+        }
 
-        [DllImport("__Internal")]
-        [return: MarshalAs(UnmanagedType.U1)]
-        private static extern bool _BridgeJsCore_JsValue_IsString(IntPtr value);
+        public bool Value { get; }
+        public override string ToString() => Value.ToString();
+    }
 
-        [DllImport("__Internal")]
-        [return: MarshalAs(UnmanagedType.U1)]
-        private static extern bool _BridgeJsCore_JsValue_IsObject(IntPtr value);
+    public class JsNumber : IJsValue
+    {
+        public JsNumber(string rawValue)
+        {
+            this.rawValue = rawValue;
+        }
 
-        [DllImport("__Internal")]
-        [return: MarshalAs(UnmanagedType.U1)]
-        private static extern bool _BridgeJsCore_JsValue_IsArray(IntPtr value);
+        private string rawValue;
+        public Int32 ToInt32() => Int32.Parse(rawValue);
+        public UInt32 ToUInt32() => UInt32.Parse(rawValue);
+        public double ToDouble() => double.Parse(rawValue);
+        public float ToFloat() => (float) ToDouble();
+        public override string ToString() => rawValue;
+    }
 
-        [DllImport("__Internal")]
-        [return: MarshalAs(UnmanagedType.U1)]
-        private static extern bool _BridgeJsCore_JsValue_ToBool(IntPtr value);
+    public class JsString : IJsValue
+    {
+        public JsString(string value)
+        {
+            Value = value;
+        }
 
-        [DllImport("__Internal")]
-        private static extern double _BridgeJsCore_JsValue_ToDouble(IntPtr value);
+        public string Value { get; }
+        public override string ToString() => Value;
+    }
 
-        [DllImport("__Internal")]
-        private static extern Int32 _BridgeJsCore_JsValue_ToInt32(IntPtr value);
-
-        [DllImport("__Internal")]
-        private static extern UInt32 _BridgeJsCore_JsValue_ToUInt32(IntPtr value);
-
-        [DllImport("__Internal")]
-        private static extern string _BridgeJsCore_JsValue_ToString(IntPtr value);
-
+    public class JsObject : IJsValue
+    {
         [DllImport("__Internal")]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool _BridgeJsCore_JsValue_HasProperty(IntPtr value, string property);
 
         [DllImport("__Internal")]
-        private static extern IntPtr _BridgeJsCore_JsValue_AtIndex(IntPtr value, int index);
-
-        [DllImport("__Internal")]
         private static extern IntPtr _BridgeJsCore_JsValue_ForProperty(IntPtr value, string property);
 
-        private readonly IntPtr value;
+        [DllImport("__Internal")]
+        private static extern IntPtr _BridgeJsCore_JsValue_AtIndex(IntPtr value, int index);
 
-        public JsValue(IntPtr value)
+        public JsObject(IntPtr ptr, string rawValue)
         {
-            this.value = value;
+            this.ptr = ptr;
+            this.rawValue = rawValue;
         }
 
-        public bool IsUndefined() => _BridgeJsCore_JsValue_IsUndefined(value);
-        public bool IsNull() => _BridgeJsCore_JsValue_IsNull(value);
-        public bool IsBoolean() => _BridgeJsCore_JsValue_IsBoolean(value);
-        public bool IsNumber() => _BridgeJsCore_JsValue_IsNumber(value);
-        public bool IsString() => _BridgeJsCore_JsValue_IsString(value);
-        public bool IsObject() => _BridgeJsCore_JsValue_IsObject(value);
-        public bool IsArray() => _BridgeJsCore_JsValue_IsArray(value);
+        private readonly IntPtr ptr;
+        private readonly string rawValue;
+        public override string ToString() => rawValue;
 
-        public bool ToBool() => _BridgeJsCore_JsValue_ToBool(value);
-        public double ToDouble() => _BridgeJsCore_JsValue_ToDouble(value);
-        public float ToFloat() => (float) ToDouble();
-        public Int32 ToInt32() => _BridgeJsCore_JsValue_ToInt32(value);
-        public UInt32 ToUInt32() => _BridgeJsCore_JsValue_ToUInt32(value);
-        public override string ToString() => _BridgeJsCore_JsValue_ToString(value);
+        public bool HasProperty(string property) => _BridgeJsCore_JsValue_HasProperty(ptr, property);
 
-        public bool HasProperty(string property) => _BridgeJsCore_JsValue_HasProperty(value, property);
-
-        public JsValue AtIndex(int index)
+        public IJsValue ForProperty(string property)
         {
-            var rawJsValuePtr = _BridgeJsCore_JsValue_AtIndex(value, index);
-            return new JsValue(rawJsValuePtr);
+            var rawJsValuePtr = _BridgeJsCore_JsValue_ForProperty(ptr, property);
+            var jsValue = Engine.ToJsValue(rawJsValuePtr);
+            return jsValue;
         }
 
-        public JsValue ForProperty(string property)
+        public IJsValue AtIndex(int index)
         {
-            var rawJsValuePtr = _BridgeJsCore_JsValue_ForProperty(value, property);
-            return new JsValue(rawJsValuePtr);
+            var rawJsValuePtr = _BridgeJsCore_JsValue_AtIndex(ptr, index);
+            var jsValue = Engine.ToJsValue(rawJsValuePtr);
+            return jsValue;
         }
+    }
+
+    public class JsArray : JsObject
+    {
+        public JsArray(IntPtr ptr, string rawValue) : base(ptr, rawValue)
+        {
+        }
+
+        public int Length => ((JsNumber) ForProperty("length")).ToInt32();
+    }
+
+    public class JsUnknown : IJsValue
+    {
+        public JsUnknown(string value)
+        {
+            Value = value;
+        }
+
+        public string Value { get; }
+        public override string ToString() => Value;
     }
 }

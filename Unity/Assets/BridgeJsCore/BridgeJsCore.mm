@@ -13,9 +13,39 @@ char* BridgeJsCore_MakeStringCopy(const char* string)
     return res;
 }
 
+struct SerializedJsValue
+{
+    char *Value;
+    bool Bool;
+    JSValue *Ptr;
+    bool IsUndefined;
+    bool IsNull;
+    bool IsBoolean;
+    bool IsNumber;
+    bool IsString;
+    bool IsObject;
+    bool IsArray;
+};
+
+SerializedJsValue *BridgeJsCore_MakeSerializedJsValue(JSValue *original)
+{
+    SerializedJsValue *serialized = new SerializedJsValue();
+    serialized->Value = BridgeJsCore_MakeStringCopy([original.toString UTF8String]);
+    serialized->Bool = original.toBool;
+    serialized->Ptr = original;
+    serialized->IsUndefined = original.isUndefined;
+    serialized->IsNull = original.isNull;
+    serialized->IsBoolean = original.isBoolean;
+    serialized->IsNumber = original.isNumber;
+    serialized->IsString = original.isString;
+    serialized->IsObject = original.isObject;
+    serialized->IsArray = original.isArray;
+    return serialized;
+}
+
 extern "C"
 {
-    JSValue *_BridgeJsCore_EvaluateScript(JSContext *context, const char *text, char *&error)
+    SerializedJsValue *_BridgeJsCore_EvaluateScript(JSContext *context, const char *text, char *&error)
     {
         __block NSString *exceptionString = @"";
         context.exceptionHandler = ^(JSContext *context, JSValue *exception) {
@@ -24,68 +54,12 @@ extern "C"
 
         JSValue *original = [context evaluateScript: BridgeJsCore_CreateNSString(text)];
         error = BridgeJsCore_MakeStringCopy([exceptionString UTF8String]);
-        
-        return original;
+        return BridgeJsCore_MakeSerializedJsValue(original);
     }
 
-    bool _BridgeJsCore_JsValue_IsUndefined(JSValue *jsValue)
+    void _BridgeJsCore_FreeJsValue(SerializedJsValue *serialized)
     {
-        return jsValue.isUndefined;
-    }
-
-    bool _BridgeJsCore_JsValue_IsNull(JSValue *jsValue)
-    {
-        return jsValue.isNull;
-    }
-
-    bool _BridgeJsCore_JsValue_IsBoolean(JSValue *jsValue)
-    {
-        return jsValue.isBoolean;
-    }
-
-    bool _BridgeJsCore_JsValue_IsNumber(JSValue *jsValue)
-    {
-        return jsValue.isNumber;
-    }
-
-    bool _BridgeJsCore_JsValue_IsString(JSValue *jsValue)
-    {
-        return jsValue.isString;
-    }
-
-    bool _BridgeJsCore_JsValue_IsObject(JSValue *jsValue)
-    {
-        return jsValue.isObject;
-    }
-
-    bool _BridgeJsCore_JsValue_IsArray(JSValue *jsValue)
-    {
-        return jsValue.isArray;
-    }
-
-    bool _BridgeJsCore_JsValue_ToBool(JSValue *jsValue)
-    {
-        return jsValue.toBool;
-    }
-
-    double _BridgeJsCore_JsValue_ToDouble(JSValue *jsValue)
-    {
-        return jsValue.toDouble;
-    }
-
-    int32_t _BridgeJsCore_JsValue_ToInt32(JSValue *jsValue)
-    {
-        return jsValue.toInt32;
-    }
-
-    uint32_t _BridgeJsCore_JsValue_ToUInt32(JSValue *jsValue)
-    {
-        return jsValue.toUInt32;
-    }
-
-    char *_BridgeJsCore_JsValue_ToString(JSValue *jsValue)
-    {
-        return BridgeJsCore_MakeStringCopy([jsValue.toString UTF8String]);
+        delete serialized;
     }
 
     bool _BridgeJsCore_JsValue_HasProperty(JSValue *jsValue, const char *property)
@@ -93,13 +67,15 @@ extern "C"
         return [jsValue hasProperty: BridgeJsCore_CreateNSString(property)];
     }
 
-    JSValue *_BridgeJsCore_JsValue_AtIndex(JSValue *jsValue, int index)
+    SerializedJsValue *_BridgeJsCore_JsValue_AtIndex(JSValue *jsValue, int index)
     {
-        return [jsValue valueAtIndex: index];
+        JSValue *original = [jsValue valueAtIndex: index];
+        return BridgeJsCore_MakeSerializedJsValue(original);
     }
 
-    JSValue *_BridgeJsCore_JsValue_ForProperty(JSValue *jsValue, const char *property)
+    SerializedJsValue *_BridgeJsCore_JsValue_ForProperty(JSValue *jsValue, const char *property)
     {
-        return [jsValue valueForProperty: BridgeJsCore_CreateNSString(property)];
+        JSValue *original = [jsValue valueForProperty: BridgeJsCore_CreateNSString(property)];
+        return BridgeJsCore_MakeSerializedJsValue(original);
     }
 }
