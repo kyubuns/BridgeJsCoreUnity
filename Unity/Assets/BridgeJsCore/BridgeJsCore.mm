@@ -28,10 +28,6 @@ extern "C"
         return original;
     }
 
-    void _BridgeJsCore_JsValue_Dispose(JSValue *jsValue)
-    {
-    }
-
     bool _BridgeJsCore_JsValue_IsUndefined(JSValue *jsValue)
     {
         return jsValue.isUndefined;

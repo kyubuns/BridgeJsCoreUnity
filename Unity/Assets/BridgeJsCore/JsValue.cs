@@ -4,11 +4,8 @@ using System.Runtime.InteropServices;
 namespace BridgeJsCore
 {
     // https://developer.apple.com/documentation/javascriptcore/jsvalue
-    public class JsValue : IDisposable
+    public class JsValue
     {
-        [DllImport("__Internal")]
-        private static extern void _BridgeJsCore_JsValue_Dispose(IntPtr value);
-
         [DllImport("__Internal")]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool _BridgeJsCore_JsValue_IsUndefined(IntPtr value);
@@ -64,18 +61,10 @@ namespace BridgeJsCore
         private static extern IntPtr _BridgeJsCore_JsValue_ForProperty(IntPtr value, string property);
 
         private readonly IntPtr value;
-        private bool disposed;
 
         public JsValue(IntPtr value)
         {
             this.value = value;
-        }
-
-        public void Dispose()
-        {
-            if (disposed) return;
-            disposed = true;
-            _BridgeJsCore_JsValue_Dispose(value);
         }
 
         public bool IsUndefined() => _BridgeJsCore_JsValue_IsUndefined(value);
