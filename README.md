@@ -1,11 +1,25 @@
 # BridgeJsCoreUnity
 
-Run JavaScript on Unity iOS, macOS
+The fast JavaScript executor for Unity iOS, macOS by using JavaScriptCore.
+
+## Compare
+
+| | BridgeJsCoreUnity | Native(C#) | [jint(js)](https://github.com/sebastienros/jint) | [xLua](https://github.com/Tencent/xLua) |
+| --- | --- | --- | --- | --- |
+| Factory | | | | |
+| [Func1(VerySimpleMethod)](https://github.com/kyubuns/HaxeUnityBenchmark/blob/master/Haxe/src/bench/Main.hx#L5) | | | | |
+| [Func2(Sum1-10000)](https://github.com/kyubuns/HaxeUnityBenchmark/blob/master/Haxe/src/bench/Main.hx#L10) | | | | |
+
+The same code is generated in C#, JavaScript and Lua using Haxe.
+
+- [HaxeUnityBenchmark](https://github.com/kyubuns/HaxeUnityBenchmark)
+- on iPhone11Pro
 
 ## Instructions
 
 - via Unity Package Manager
-  - `https://github.com/kyubuns/BridgeJsCoreUnity.git?path=Unity/Assets/BridgeJsCore` or `git@github.com/kyubuns/BridgeJsCoreUnity.git?path=Unity/Assets/BridgeJsCore`
+  - `https://github.com/kyubuns/BridgeJsCoreUnity.git?path=Unity/Assets/BridgeJsCore`
+  - `git@github.com/kyubuns/BridgeJsCoreUnity.git?path=Unity/Assets/BridgeJsCore`
 
 ## Getting started
 
