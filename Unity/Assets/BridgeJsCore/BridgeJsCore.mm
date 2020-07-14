@@ -57,6 +57,19 @@ extern "C"
         return BridgeJsCore_MakeSerializedJsValue(original);
     }
 
+    char *_BridgeJsCore_EvaluateScriptReturnString(JSContext *context, const char *text, char *&error)
+    {
+        __block NSString *exceptionString = @"";
+        context.exceptionHandler = ^(JSContext *context, JSValue *exception) {
+            exceptionString = [exception toString];
+        };
+
+        JSValue *original = [context evaluateScript: BridgeJsCore_CreateNSString(text)];
+        error = BridgeJsCore_MakeStringCopy([exceptionString UTF8String]);
+        NSString *resultText = [original toString];
+        return BridgeJsCore_MakeStringCopy([resultText UTF8String]);
+    }
+
     void _BridgeJsCore_EvaluateScriptWithoutReturnValue(JSContext *context, const char *text, char *&error)
     {
         __block NSString *exceptionString = @"";
@@ -96,10 +109,21 @@ extern "C"
 
     JSContext *staticContext;
 
+    void _BridgeJsCoreStatic_Release()
+    {
+        staticContext = NULL;
+    }
+
     SerializedJsValue *_BridgeJsCoreStatic_EvaluateScript(const char *text, char *&error)
     {
         if (staticContext == NULL) staticContext = [[JSContext alloc] init];
         return _BridgeJsCore_EvaluateScript(staticContext, text, error);
+    }
+
+    char *_BridgeJsCoreStatic_EvaluateScriptReturnString(const char *text, char *&error)
+    {
+        if (staticContext == NULL) staticContext = [[JSContext alloc] init];
+        return _BridgeJsCore_EvaluateScriptReturnString(staticContext, text, error);
     }
 
     void _BridgeJsCoreStatic_EvaluateScriptWithoutReturnValue(const char *text, char *&error)
