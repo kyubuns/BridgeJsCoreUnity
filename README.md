@@ -16,7 +16,7 @@ The same code is generated in C#, JavaScript and Lua using Haxe.
 
 ## Instructions
 
-- via Package
+- via UnityPackage
   - [See Releases](https://github.com/kyubuns/BridgeJsCoreUnity/releases)
 - via Unity Package Manager
   - `https://github.com/kyubuns/BridgeJsCoreUnity.git?path=Unity/Assets/BridgeJsCore`
