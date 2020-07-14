@@ -93,4 +93,24 @@ extern "C"
         JSValue *original = [jsValue valueForProperty: BridgeJsCore_CreateNSString(property)];
         return BridgeJsCore_MakeSerializedJsValue(original);
     }
+
+    JSContext *staticContext;
+
+    SerializedJsValue *_BridgeJsCoreStatic_EvaluateScript(const char *text, char *&error)
+    {
+        if (staticContext == NULL) staticContext = [[JSContext alloc] init];
+        return _BridgeJsCore_EvaluateScript(staticContext, text, error);
+    }
+
+    void _BridgeJsCoreStatic_EvaluateScriptWithoutReturnValue(const char *text, char *&error)
+    {
+        if (staticContext == NULL) staticContext = [[JSContext alloc] init];
+        _BridgeJsCore_EvaluateScriptWithoutReturnValue(staticContext, text, error);
+    }
+
+    void _BridgeJsCoreStatic_EvaluateScriptWithoutReturnValueNoError(const char *text)
+    {
+        if (staticContext == NULL) staticContext = [[JSContext alloc] init];
+        _BridgeJsCore_EvaluateScriptWithoutReturnValueNoError(staticContext, text);
+    }
 }
