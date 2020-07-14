@@ -1,0 +1,16 @@
+{
+  "name": "dev.kyubuns.bridgejscore",
+  "displayName": "BridgeJsCore",
+  "version": "1.0.0",
+  "unity": "2019.4",
+  "description": "Run JavaScript on Unity iOS, macOS",
+  "documentationUrl": "https://github.com/kyubuns/BridgeJsCoreUnity",
+  "dependencies": {
+  },
+  "author": {
+    "name": "kyubuns",
+    "email": "kyubuns@gmail.com",
+    "url": "https://kyubuns.dev/"
+  },
+  "type": "library"
+}
