@@ -6,9 +6,8 @@ The fast JavaScript executor for Unity iOS, macOS by using JavaScriptCore.
 
 | | BridgeJsCoreUnity | Native(C#) | [jint(js)](https://github.com/sebastienros/jint) | [xLua](https://github.com/Tencent/xLua) |
 | --- | --- | --- | --- | --- |
-| Factory | | | | |
-| [Func1(VerySimpleMethod)](https://github.com/kyubuns/HaxeUnityBenchmark/blob/master/Haxe/src/bench/Main.hx#L5) | | | | |
-| [Func2(Sum1-10000)](https://github.com/kyubuns/HaxeUnityBenchmark/blob/master/Haxe/src/bench/Main.hx#L10) | | | | |
+| Factory * 1000Times | 0.40s | 0.00s | 0.09s | 1.00s |
+| [Sum1-10000 * 10000Times](https://github.com/kyubuns/HaxeUnityBenchmark/blob/master/Haxe/src/bench/Main.hx#L10) | 1.56s | 0.00s | 36.50s | 2.30s |
 
 The same code is generated in C#, JavaScript and Lua using Haxe.
 
