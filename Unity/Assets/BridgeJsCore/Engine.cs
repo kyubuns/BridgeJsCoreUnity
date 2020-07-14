@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using UnityEngine.Scripting;
 
 namespace BridgeJsCore
 {
@@ -17,6 +18,7 @@ namespace BridgeJsCore
         [DllImport("__Internal")]
         private static extern void _BridgeJsCore_FreeJsValue(IntPtr value);
 
+        [Preserve]
         [StructLayout(LayoutKind.Sequential)]
         private class RawJsValue
         {
