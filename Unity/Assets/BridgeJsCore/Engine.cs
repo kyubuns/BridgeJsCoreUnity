@@ -15,6 +15,12 @@ namespace BridgeJsCore
         private static extern IntPtr _BridgeJsCore_EvaluateScript(IntPtr context, string script, out string error);
 
         [DllImport("__Internal")]
+        private static extern void _BridgeJsCore_EvaluateScriptWithoutReturnValue(IntPtr context, string script, out string error);
+
+        [DllImport("__Internal")]
+        private static extern void _BridgeJsCore_EvaluateScriptWithoutReturnValueNoError(IntPtr context, string script);
+
+        [DllImport("__Internal")]
         private static extern void _BridgeJsCore_FreeJsValue(IntPtr value);
 
         [StructLayout(LayoutKind.Sequential)]
@@ -53,6 +59,19 @@ namespace BridgeJsCore
             var rawJsValuePtr = _BridgeJsCore_EvaluateScript(context, script, out var error);
             var jsValue = ToJsValue(rawJsValuePtr);
             return (jsValue, error);
+        }
+
+        public string EvaluateScriptWithoutReturnValue(string script)
+        {
+            if (disposed) throw new InvalidOperationException("engine is disposed");
+            _BridgeJsCore_EvaluateScriptWithoutReturnValue(context, script, out var error);
+            return error;
+        }
+
+        public void EvaluateScriptWithoutReturnValueNoError(string script)
+        {
+            if (disposed) throw new InvalidOperationException("engine is disposed");
+            _BridgeJsCore_EvaluateScriptWithoutReturnValueNoError(context, script);
         }
 
         public static IJsValue ToJsValue(IntPtr rawJsValuePtr)

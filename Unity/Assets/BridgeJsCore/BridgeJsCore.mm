@@ -57,6 +57,21 @@ extern "C"
         return BridgeJsCore_MakeSerializedJsValue(original);
     }
 
+    void _BridgeJsCore_EvaluateScriptWithoutReturnValue(JSContext *context, const char *text, char *&error)
+    {
+        __block NSString *exceptionString = @"";
+        context.exceptionHandler = ^(JSContext *context, JSValue *exception) {
+            exceptionString = [exception toString];
+        };
+
+        [context evaluateScript: BridgeJsCore_CreateNSString(text)];
+    }
+
+    void _BridgeJsCore_EvaluateScriptWithoutReturnValueNoError(JSContext *context, const char *text)
+    {
+        [context evaluateScript: BridgeJsCore_CreateNSString(text)];
+    }
+
     void _BridgeJsCore_FreeJsValue(SerializedJsValue *serialized)
     {
         delete serialized;
